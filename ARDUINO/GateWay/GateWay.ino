@@ -42,7 +42,6 @@ void setup() {
 
 void loop() {
   network.update();
-// Display();  
   if (Serial.available() > 0){
     inByte = Serial.read();
     if(inByte == 's'){sent_data();}
