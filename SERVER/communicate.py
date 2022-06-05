@@ -66,6 +66,9 @@ class Communicate:
     def magenta(self):
         self.obj.write(b"m")
 
+    def loading(self):
+        self.obj.write(b"l")
+
     def num_of_nodes(self):
         self.obj.write(b"n")
 

@@ -73,7 +73,7 @@ def conditionAlert(data):
     elif X1 > red or Y1 > red or Z1 > red or X2 > red or Y2 > red or Z2 > red:
         gateway.red()
         print("Red")
-    elif (Rain1 > 100 or Moisture1 > 100) and (Rain2 > 100 or Moisture2 > 100):
+    elif (Rain1 > 100 or Moisture1 > 100) or (Rain2 > 100 or Moisture2 > 100):
         gateway.orange()
         print("Orange")
     elif (Rain1 > 60 or Moisture1 > 50) or (Rain2 > 60 or Moisture2 > 50):
@@ -113,6 +113,7 @@ if connected:
                     except:
                         pass
                 else:
+                    gateway.loading()
                     print("Callibrating...")
 
             time.sleep(0.2)
