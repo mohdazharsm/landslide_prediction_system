@@ -69,6 +69,7 @@ if connected:
                 valdiDataCount += 1
                 if valdiDataCount == 20:
                     makeFile("processedData.csv")
+                    pass
                 if valdiDataCount > 25:
                     processedData = processData(valdiDataCount - 1, calDataCount)
                     print(processedData)
