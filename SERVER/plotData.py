@@ -1,0 +1,73 @@
+from communicate import Communicate, get_value
+import time
+import csv
+
+port = "COM6"
+connected = False
+gateway = Communicate(port, 9600)
+
+time.sleep(1)
+
+if gateway.handshake():
+    connected = True
+    print("Connected")
+else:
+    print(" Not Connected")
+
+fieldnames = [
+    "Rain1",
+    "Moisture1",
+    "X1",
+    "Y1",
+    "Z1",
+    "Rain2",
+    "Moisture2",
+    "X2",
+    "Y2",
+    "Z2",
+]
+
+
+def makeFile(file_name="incoming.csv"):
+    with open(file_name, "w") as csv_file:
+        csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        csv_writer.writeheader()
+
+
+def writeData(Input, file_name="incoming.csv"):
+    with open(file_name, "a+", newline="") as csv_file:
+        csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        try:
+            info = {
+                "Rain1": Input[0],
+                "Moisture1": Input[1],
+                "X1": Input[2],
+                "Y1": Input[3],
+                "Z1": Input[4],
+                "Rain2": Input[5],
+                "Moisture2": Input[6],
+                "X2": Input[7],
+                "Y2": Input[8],
+                "Z2": Input[9],
+            }
+            csv_writer.writerow(info)
+        except IndexError:
+            print("No suficcient elemets")
+        except TypeError:
+            print("None type object cannot be saved")
+
+
+if connected:
+    makeFile()
+    while True:
+        try:
+            Input = get_value(gateway)
+            print(Input)
+            writeData(Input)
+            time.sleep(0.5)
+        except KeyboardInterrupt:
+            gateway.close()
+            break
+        except:
+            print("Error")
+            break
