@@ -14,7 +14,7 @@ for first in ax:
 
 def animate(i):
     try:
-        data = pd.read_csv("incoming.csv")
+        data = pd.read_csv("processedData.csv")
         x = data.index.values
         RainFall_1 = data["Rain1"]
         Soil_1 = data["Moisture1"]

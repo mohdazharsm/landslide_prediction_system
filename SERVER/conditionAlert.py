@@ -70,9 +70,8 @@ if connected:
                 if valdiDataCount == 20:
                     makeFile("processedData.csv")
                 if valdiDataCount > 25:
-                    processedData = processData(valdiDataCount - 1, calDataCount)
-                    print(processedData)
-                    # for re-calibration (gyroscope data)
+                    processData(valdiDataCount - 1, calDataCount)
+                    # for re-calibration
                     try:
                         if keyboard.is_pressed("c"):
                             print("Re-Callibrating...")
