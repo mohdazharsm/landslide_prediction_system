@@ -41,3 +41,29 @@ def writeData(Input, file_name="incoming.csv"):
             print("No suficcient elemets")
         except TypeError:
             print("None type object cannot be saved")
+
+
+def writeTrainingData(Input, Color, file_name="trainingData.csv"):
+    with open(file_name, "a+", newline="") as csv_file:
+        fieldnamesForTrainignAI = fieldnames
+        fieldnamesForTrainignAI.append("Color")
+        csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnamesForTrainignAI)
+        try:
+            info = {
+                "Rain1": Input[0],
+                "Moisture1": Input[1],
+                "X1": Input[2],
+                "Y1": Input[3],
+                "Z1": Input[4],
+                "Rain2": Input[5],
+                "Moisture2": Input[6],
+                "X2": Input[7],
+                "Y2": Input[8],
+                "Z2": Input[9],
+                "Color": Color,
+            }
+            csv_writer.writerow(info)
+        except IndexError:
+            print("No suficcient elemets")
+        except TypeError:
+            print("None type object cannot be saved")

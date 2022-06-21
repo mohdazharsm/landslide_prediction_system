@@ -1,4 +1,4 @@
-from writeCsv import writeData, makeFile
+from writeCsv import writeData
 import pandas as pd
 
 

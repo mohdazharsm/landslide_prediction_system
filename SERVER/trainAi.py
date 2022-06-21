@@ -1,5 +1,5 @@
 from communicate import Communicate, get_value
-from writeCsv import writeData, makeFile
+from writeCsv import writeData, makeFile, writeTrainingData
 from processData import processData
 import time
 import keyboard
@@ -87,8 +87,12 @@ def conditionAlert(data):
         print("White")
 
 
+# color for training data
+Color = "white"
+
 if connected:
     makeFile()
+    makeFile(file_name="trainingData.csv")
     valdiDataCount = 0  # count of valid data
     calDataCount = 20  # for calibration
     while True:
@@ -104,12 +108,25 @@ if connected:
                 if valdiDataCount > 25:
                     processedData = processData(valdiDataCount - 1, calDataCount)
                     print(processedData)
-                    conditionAlert(processedData)
-                    # for re-calibration (gyroscope data)
+                    # setting color and storing training data
+                    writeTrainingData(processedData, Color)
                     try:
+                        # for re-calibration (gyroscope data)
                         if keyboard.is_pressed("c"):
                             print("Re-Callibrating...")
                             calDataCount = valdiDataCount - 1
+                        elif keyboard.is_pressed("w"):
+                            Color = "white"
+                        elif keyboard.is_pressed("g"):
+                            Color = "green"
+                        elif keyboard.is_pressed("y"):
+                            Color = "yellow"
+                        elif keyboard.is_pressed("o"):
+                            Color = "orange"
+                        elif keyboard.is_pressed("r"):
+                            Color = "red"
+                        elif keyboard.is_pressed("m"):
+                            Color = "magenta"
                     except:
                         pass
                 else:
