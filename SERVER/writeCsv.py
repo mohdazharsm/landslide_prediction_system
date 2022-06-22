@@ -46,7 +46,7 @@ def writeData(Input, file_name="incoming.csv"):
 def writeTrainingData(Input, Color, file_name="trainingData.csv"):
     with open(file_name, "a+", newline="") as csv_file:
         fieldnamesForTrainignAI = fieldnames
-        fieldnamesForTrainignAI.append("Color")
+        fieldnamesForTrainignAI.append("Target")
         csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnamesForTrainignAI)
         try:
             info = {
@@ -60,7 +60,7 @@ def writeTrainingData(Input, Color, file_name="trainingData.csv"):
                 "X2": Input[7],
                 "Y2": Input[8],
                 "Z2": Input[9],
-                "Color": Color,
+                "Target": Color,
             }
             csv_writer.writerow(info)
         except IndexError:
