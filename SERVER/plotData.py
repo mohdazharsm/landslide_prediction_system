@@ -1,6 +1,6 @@
 from communicate import Communicate, get_value
 from writeCsv import writeData, makeFile
-from processData import processData
+from processData import processData, isValidData
 import time
 import keyboard
 
@@ -14,46 +14,6 @@ if gateway.handshake():
     print("Connected")
 else:
     print(" Not Connected")
-
-
-def isValidData(Input):
-    try:
-        if (
-            Input[0] == 0
-            and Input[1] == 0
-            and Input[2] == 0
-            and Input[3] == 0
-            and Input[4] == 0
-            and Input[5] == 0
-            and Input[6] == 0
-            and Input[7] == 0
-            and Input[8] == 0
-            and Input[9] == 0
-        ):
-            print("No nodes connected")
-            return False
-        elif (
-            Input[0] == 0
-            and Input[1] == 0
-            and Input[2] == 0
-            and Input[3] == 0
-            and Input[4] == 0
-        ):
-            print("First node not connected")
-            return False
-        elif (
-            Input[5] == 0
-            and Input[6] == 0
-            and Input[7] == 0
-            and Input[8] == 0
-            and Input[9] == 0
-        ):
-            print("Second node not connected")
-            return False
-        else:
-            return True
-    except IndexError:
-        return False
 
 
 if connected:

@@ -1,10 +1,10 @@
 from communicate import Communicate, get_value
-from writeCsv import writeData, makeFile
-from processData import processData
+from writeCsv import writeData, makeFile, writeTrainingData
+from processData import processData, isValidData
 import time
 import keyboard
 
-port = "COM11"
+port = "COM5"
 connected = False
 gateway = Communicate(port, 9600)
 time.sleep(1)
@@ -14,46 +14,6 @@ if gateway.handshake():
     print("Connected")
 else:
     print(" Not Connected")
-
-
-def isValidData(Input):
-    try:
-        if (
-            Input[0] == 0
-            and Input[1] == 0
-            and Input[2] == 0
-            and Input[3] == 0
-            and Input[4] == 0
-            and Input[5] == 0
-            and Input[6] == 0
-            and Input[7] == 0
-            and Input[8] == 0
-            and Input[9] == 0
-        ):
-            print("No nodes connected")
-            return False
-        elif (
-            Input[0] == 0
-            and Input[1] == 0
-            and Input[2] == 0
-            and Input[3] == 0
-            and Input[4] == 0
-        ):
-            print("First node not connected")
-            return False
-        elif (
-            Input[5] == 0
-            and Input[6] == 0
-            and Input[7] == 0
-            and Input[8] == 0
-            and Input[9] == 0
-        ):
-            print("Second node not connected")
-            return False
-        else:
-            return True
-    except IndexError:
-        return False
 
 
 def conditionAlert(data):
@@ -70,21 +30,27 @@ def conditionAlert(data):
     ):
         gateway.magenta()
         print("Magenta")
+        return "magenta"
     elif X1 > red or Y1 > red or Z1 > red or X2 > red or Y2 > red or Z2 > red:
         gateway.red()
         print("Red")
-    elif (Rain1 > 100 or Moisture1 > 235) or (Rain2 > 100 or Moisture2 > 235):
+        return "red"
+    elif (Rain1 > 200 or Moisture1 > 31) or (Rain2 > 200 or Moisture2 > 31):
         gateway.orange()
         print("Orange")
-    elif (Rain1 > 60 or Moisture1 > 210) or (Rain2 > 60 or Moisture2 > 210):
+        return "orange"
+    elif (Rain1 > 100 or Moisture1 > 20) or (Rain2 > 100 or Moisture2 > 20):
         gateway.yellow()
         print("Yellow")
-    elif (Rain1 > 30 or Moisture1 > 200) or (Rain2 > 30 or Moisture2 > 200):
+        return "yellow"
+    elif (Rain1 > 30 or Moisture1 > 16) or (Rain2 > 30 or Moisture2 > 17):
         gateway.green()
         print("Green")
+        return "green"
     else:
         gateway.white()
         print("White")
+        return "white"
 
 
 if connected:
@@ -104,7 +70,7 @@ if connected:
                 if valdiDataCount > 25:
                     processedData = processData(valdiDataCount - 1, calDataCount)
                     print(processedData)
-                    conditionAlert(processedData)
+                    Color = conditionAlert(processedData)
                     # for re-calibration (gyroscope data)
                     try:
                         if keyboard.is_pressed("c"):

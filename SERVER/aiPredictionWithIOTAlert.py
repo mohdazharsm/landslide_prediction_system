@@ -1,13 +1,11 @@
 from communicate import Communicate, get_value
-from writeCsv import writeData, makeFile, writeTrainingData
-from processData import processData
-from neuton import send_request
-from collections import Counter
+from writeCsv import writeData, makeFile
+from processData import processData, isValidData
+from onnxRun import predict
 import time
 import keyboard
-import csv
 
-port = "COM11"
+port = "COM5"
 nodeMCUport = "COM6"
 connected = False
 gateway = Communicate(port, 9600)
@@ -28,59 +26,11 @@ else:
     print("Not Connected to NodeMCU")
 
 
-def isValidData(Input):
-    try:
-        if (
-            Input[0] == 0
-            and Input[1] == 0
-            and Input[2] == 0
-            and Input[3] == 0
-            and Input[4] == 0
-            and Input[5] == 0
-            and Input[6] == 0
-            and Input[7] == 0
-            and Input[8] == 0
-            and Input[9] == 0
-        ):
-            print("No nodes connected")
-            return False
-        elif (
-            Input[0] == 0
-            and Input[1] == 0
-            and Input[2] == 0
-            and Input[3] == 0
-            and Input[4] == 0
-        ):
-            print("First node not connected")
-            return False
-        elif (
-            Input[5] == 0
-            and Input[6] == 0
-            and Input[7] == 0
-            and Input[8] == 0
-            and Input[9] == 0
-        ):
-            print("Second node not connected")
-            return False
-        else:
-            return True
-    except IndexError:
-        return False
-
-
-def predictNeuton():
-    send_request(
-        url="ADD_YOUR_URL_HERE",
-        file_path="data.csv",
-    )
-
-
-def predict(file_name="result.csv"):
-    with open(file_name, "r") as f:
-        column = (row[0] for row in csv.reader(f))
-        color = Counter(column).most_common(1)[0][0]
-        print("Most frequent value: {0}".format(color))
-        return color
+def predictColor(processedData):
+    # colros in the order of the index of ml model (can be obtained by running the model using training data)
+    colors = ["green", "magenta", "orange", "red", "white", "yellow"]
+    index = predict(processedData)
+    return colors[index]
 
 
 def setGatewayColor(color="white"):
@@ -109,7 +59,6 @@ def setGatewayColor(color="white"):
 
 if connected:
     makeFile()
-    makeFile(file_name="data.csv")
     valdiDataCount = 0  # count of valid data
     calDataCount = 20  # for calibration
     processedDataCount = 0
@@ -125,15 +74,11 @@ if connected:
                     pass
                 if valdiDataCount > 25:
                     processedData = processData(valdiDataCount - 1, calDataCount)
-                    print(processedData)
-
+                    # print(processedData)
                     # Prediction
-                    writeData(processedData, file_name="data.csv")
-                    if processedDataCount == 5:
-                        processedDataCount = 0
-                        predictNeuton()
-                        color = predict()
-                        setGatewayColor(color)
+                    color = predictColor(processedData)
+                    # Alerting
+                    setGatewayColor(gateway, color)
 
                     try:
                         # for re-calibration (gyroscope data)
